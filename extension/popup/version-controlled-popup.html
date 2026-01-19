@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Arabic Subs v1.1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="enhanced-popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header with Version Info -->
+    <header class="header">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M7 15h4M13 15h4M7 11h10"/>
+        </svg>
+        <div>
+          <span>Live Arabic Subs</span>
+          <div class="version-tag">v1.1.0</div>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div id="status-indicator" class="status-indicator"></div>
+        <button id="debug-toggle" class="icon-btn" title="Debug Panel">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h18v18H3z"/>
+            <path d="M7 7h10v10H7z"/>
+            <path d="M9 9h6v6H9z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Backend Selection -->
+    <div class="settings-section">
+      <h3 class="section-title">Backend Configuration</h3>
+      
+      <div class="setting-row">
+        <label>Backend Server</label>
+        <select id="backend-selector" class="language-select">
+          <option value="external">☁️ EmergentAgent Cloud (Default)</option>
+          <option value="local">🏠 Local Server (localhost:8000)</option>
+          <option value="custom">🔧 Custom Server</option>
+        </select>
+        <div id="backend-status" class="backend-status">Checking...</div>
+      </div>
+
+      <div id="custom-backend-section" class="setting-row hidden">
+        <label>Custom Server URL</label>
+        <div class="api-key-input">
+          <input type="url" id="custom-backend-url" placeholder="https://your-server.com/api" class="key-input">
+          <button id="save-custom-backend" class="save-btn">Save</button>
+        </div>
+        <p class="key-hint">Enter your self-hosted backend URL</p>
+      </div>
+
+      <button id="test-backend" class="small-btn">Test Connection</button>
+    </div>
+
+    <!-- Main Control -->
+    <div class="main-control">
+      <button id="capture-btn" class="capture-btn">
+        <svg id="mic-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+        <svg id="stop-icon" class="hidden" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="6" width="12" height="12"/>
+        </svg>
+        <span id="capture-text">Start Capture</span>
+      </button>
+      <div id="capture-status" class="capture-status hidden"></div>
+    </div>
+
+    <!-- Language Selection -->
+    <div class="settings-section">
+      <h3 class="section-title">Languages</h3>
+      
+      <div class="setting-row">
+        <label>Source Language</label>
+        <select id="source-language" class="language-select">
+          <option value="">Auto-detect</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label>Output Language</label>
+        <select id="output-language" class="language-select">
+          <option value="ar">🇸🇦 Arabic (Modern Standard)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- API Configuration -->
+    <div class="settings-section">
+      <h3 class="section-title">API Configuration</h3>
+      
+      <div class="setting-row">
+        <label>Provider</label>
+        <select id="api-provider" class="language-select">
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Anthropic Claude</option>
+          <option value="google">Google Cloud</option>
+          <option value="azure">Microsoft Azure</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <label>API Key</label>
+        <div class="api-key-input">
+          <input type="password" id="api-key" placeholder="Enter your API key" class="key-input">
+          <button id="save-api-key" class="save-btn">Save</button>
+        </div>
+        <p class="key-hint">Your API key is stored securely in browser storage</p>
+      </div>
+    </div>
+
+    <!-- Display Settings -->
+    <div class="settings-section">
+      <h3 class="section-title">Display Settings</h3>
+      
+      <!-- Color Presets -->
+      <div class="setting-row">
+        <label>Text Color</label>
+        <div class="color-presets">
+          <button class="color-btn" data-color="#F5C518" style="background: #F5C518" title="Yellow"></button>
+          <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF" title="White"></button>
+          <button class="color-btn" data-color="#06B6D4" style="background: #06B6D4" title="Cyan"></button>
+          <button class="color-btn" data-color="#22C55E" style="background: #22C55E" title="Green"></button>
+        </div>
+      </div>
+
+      <!-- Font Size -->
+      <div class="setting-row">
+        <label>Font Size: <span id="font-size-value">28</span>px</label>
+        <input type="range" id="font-size" min="16" max="48" value="28" class="slider">
+      </div>
+
+      <!-- Background Opacity -->
+      <div class="setting-row">
+        <label>Background: <span id="opacity-value">85</span>%</label>
+        <input type="range" id="bg-opacity" min="0" max="100" value="85" class="slider">
+      </div>
+
+      <!-- Show English Toggle -->
+      <div class="setting-row toggle-row">
+        <label>Show Source Text</label>
+        <label class="switch">
+          <input type="checkbox" id="show-english" checked>
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-section">
+      <h3 class="section-title">Preview</h3>
+      <div id="preview-container" class="preview-container">
+        <div id="preview-english" class="preview-english">This is source text</div>
+        <div id="preview-arabic" class="preview-arabic">هذا نص تجريبي</div>
+      </div>
+    </div>
+
+    <!-- Debug Panel (Hidden by default) -->
+    <div id="debug-panel" class="debug-panel hidden">
+      <div class="debug-header">
+        <div>
+          <h3>Debug Information</h3>
+          <div class="debug-version">v1.1.0 - Enhanced</div>
+        </div>
+        <button id="close-debug" class="icon-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="debug-content">
+        <div class="debug-section">
+          <h4>Backend Status</h4>
+          <div id="debug-backend-status">Loading...</div>
+        </div>
+        
+        <div class="debug-section">
+          <h4>System Status</h4>
+          <div id="debug-status">Loading...</div>
+        </div>
+        
+        <div class="debug-section">
+          <h4>Recent Logs</h4>
+          <div id="debug-logs" class="log-container"></div>
+          <div class="debug-actions">
+            <button id="clear-logs" class="small-btn">Clear Logs</button>
+            <button id="export-logs" class="small-btn">Export Logs</button>
+          </div>
+        </div>
+        
+        <div class="debug-section">
+          <h4>Connection Tests</h4>
+          <button id="test-all-backends" class="small-btn">Test All Backends</button>
+          <div id="connection-results"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#" id="web-app-link">Web App</a>
+        <a href="#" id="docs-link">Documentation</a>
+      </div>
+      <div class="version-info">
+        <span class="version">v1.1.0</span>
+        <span class="build-date" id="build-date"></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts with version protection -->
+  <script src="../utils/logger.js"></script>
+  <script src="../utils/config.js"></script>
+  <script src="enhanced-popup.js"></script>
+</body>
+</html>

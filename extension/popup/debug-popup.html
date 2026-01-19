@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Arabic Subs - Debug Mode</title>
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-size: 12px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #3c3c3c;
+    }
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 3px;
+      background: #2d2d30;
+    }
+    .log-success { border-left: 3px solid #4ec9b0; }
+    .log-error { border-left: 3px solid #f48771; }
+    .log-info { border-left: 3px solid #569cd6; }
+    .log-warning { border-left: 3px solid #d7ba7d; }
+    button {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    button:hover { background: #005a9e; }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin: 3px 0;
+      background: #3c3c3c;
+      border: 1px solid #565656;
+      border-radius: 3px;
+      color: white;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .status-ok { background: #4ec9b0; }
+    .status-error { background: #f48771; }
+    .status-loading { background: #d7ba7d; animation: pulse 1s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>🔍 LAS Debug Console</h3>
+    <div>Status: <span id="extension-status" class="status-indicator status-loading"></span><span id="status-text">Initializing...</span></div>
+  </div>
+
+  <div id="logs"></div>
+
+  <button id="test-chrome-api">Test Chrome API</button>
+  <button id="test-storage">Test Storage</button>
+  <button id="test-server">Test Local Server</button>
+  <button id="test-messaging">Test Messaging</button>
+  
+  <input type="text" id="api-key-input" placeholder="Test API Key">
+  <button id="save-key">Save Test Key</button>
+
+  <script>
+    // Debug logging function
+    function addLog(message, type = 'info') {
+      const logDiv = document.createElement('div');
+      logDiv.className = `log-entry log-${type}`;
+      const timestamp = new Date().toLocaleTimeString();
+      logDiv.textContent = `[${timestamp}] ${message}`;
+      document.getElementById('logs').appendChild(logDiv);
+      
+      // Auto-scroll to bottom
+      logDiv.scrollIntoView({behavior: "smooth"});
+    }
+
+    // Update status
+    function updateStatus(text, statusClass) {
+      document.getElementById('status-text').textContent = text;
+      document.getElementById('extension-status').className = `status-indicator ${statusClass}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      addLog('Popup DOM loaded', 'success');
+      
+      try {
+        // Test Chrome APIs
+        addLog('Testing Chrome APIs...', 'info');
+        
+        if (typeof chrome === 'undefined') {
+          throw new Error('Chrome API not available');
+        }
+        addLog('✓ Chrome API available', 'success');
+
+        // Test storage access
+        addLog('Testing storage access...', 'info');
+        await new Promise((resolve, reject) => {
+          chrome.storage.sync.get(['test'], (result) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              addLog('✓ Storage access working', 'success');
+              resolve();
+            }
+          });
+        });
+
+        // Test runtime access
+        addLog('Testing runtime access...', 'info');
+        if (chrome.runtime) {
+          addLog('✓ Runtime API available', 'success');
+          addLog(`Extension ID: ${chrome.runtime.id}`, 'info');
+        } else {
+          throw new Error('Runtime API not available');
+        }
+
+        updateStatus('Ready', 'status-ok');
+        addLog('✅ Extension initialized successfully!', 'success');
+
+      } catch (error) {
+        updateStatus('Error', 'status-error');
+        addLog(`❌ Initialization failed: ${error.message}`, 'error');
+        console.error('Popup initialization error:', error);
+      }
+
+      // Button event handlers
+      document.getElementById('test-chrome-api').addEventListener('click', () => {
+        addLog('Chrome API test button clicked', 'info');
+        addLog(`Chrome version: ${navigator.userAgent.match(/Chrome\/(\d+\.\d+)/)?.[1] || 'Unknown'}`, 'info');
+      });
+
+      document.getElementById('test-storage').addEventListener('click', async () => {
+        try {
+          addLog('Testing storage operations...', 'info');
+          await chrome.storage.sync.set({ debug_test: Date.now() });
+          const result = await chrome.storage.sync.get(['debug_test']);
+          addLog(`✓ Storage test successful: ${result.debug_test}`, 'success');
+        } catch (error) {
+          addLog(`❌ Storage test failed: ${error.message}`, 'error');
+        }
+      });
+
+      document.getElementById('test-server').addEventListener('click', async () => {
+        try {
+          addLog('Testing connection to local server...', 'info');
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+          
+          const response = await fetch('http://localhost:8002/health', {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          
+          if (response.ok) {
+            const data = await response.json();
+            addLog(`✓ Server connected: ${data.version}`, 'success');
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          addLog(`❌ Server connection failed: ${error.message}`, 'error');
+        }
+      });
+
+      document.getElementById('test-messaging').addEventListener('click', () => {
+        addLog('Testing message sending...', 'info');
+        chrome.runtime.sendMessage({ type: 'DEBUG_PING' }, (response) => {
+          if (chrome.runtime.lastError) {
+            addLog(`❌ Message failed: ${chrome.runtime.lastError.message}`, 'error');
+          } else {
+            addLog(`✓ Message response: ${JSON.stringify(response)}`, 'success');
+          }
+        });
+      });
+
+      document.getElementById('save-key').addEventListener('click', () => {
+        const key = document.getElementById('api-key-input').value.trim();
+        if (key) {
+          chrome.storage.sync.set({ lasApiKey: key }, () => {
+            if (chrome.runtime.lastError) {
+              addLog(`❌ Save failed: ${chrome.runtime.lastError.message}`, 'error');
+            } else {
+              addLog('✓ API key saved successfully', 'success');
+            }
+          });
+        } else {
+          addLog('⚠️ Please enter an API key', 'warning');
+        }
+      });
+
+      // Listen for background messages
+      chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        addLog(`📥 Message received: ${JSON.stringify(message)}`, 'info');
+        sendResponse({ received: true, timestamp: Date.now() });
+      });
+
+    });
+  </script>
+</body>
+</html>

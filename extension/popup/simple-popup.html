@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Arabic Subs - Simple Test</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 4px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background: #0056b3; }
+    button:disabled { background: #6c757d; cursor: not-allowed; }
+    .info {
+      font-size: 12px;
+      color: #666;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>🎙️ Live Arabic Subs</h2>
+      <p>v1.1.0 - Test Mode</p>
+    </div>
+    
+    <div id="status-message" class="status success">
+      Extension loaded successfully!
+    </div>
+    
+    <button id="test-button">Test Connection</button>
+    <button id="capture-button">Start Capture</button>
+    
+    <div id="info" class="info">
+      Local server running on port 8002<br>
+      Ready for testing
+    </div>
+  </div>
+
+  <script>
+    // Simple test script
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Popup loaded successfully');
+      
+      const statusMessage = document.getElementById('status-message');
+      const testButton = document.getElementById('test-button');
+      const captureButton = document.getElementById('capture-button');
+      
+      // Update status
+      statusMessage.textContent = '✅ Extension initialized successfully';
+      statusMessage.className = 'status success';
+      
+      // Test button functionality
+      testButton.addEventListener('click', async () => {
+        try {
+          testButton.disabled = true;
+          testButton.textContent = 'Testing...';
+          
+          // Test connection to local server
+          const response = await fetch('http://localhost:8002/health');
+          const data = await response.json();
+          
+          if (response.ok) {
+            statusMessage.textContent = `✅ Connected to server: ${data.version}`;
+            statusMessage.className = 'status success';
+          } else {
+            throw new Error('Server responded with error');
+          }
+        } catch (error) {
+          statusMessage.textContent = `❌ Connection failed: ${error.message}`;
+          statusMessage.className = 'status error';
+        } finally {
+          testButton.disabled = false;
+          testButton.textContent = 'Test Connection';
+        }
+      });
+      
+      // Capture button functionality
+      captureButton.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'START_CAPTURE' }, (response) => {
+          if (chrome.runtime.lastError) {
+            statusMessage.textContent = `❌ Error: ${chrome.runtime.lastError.message}`;
+            statusMessage.className = 'status error';
+          } else if (response?.success) {
+            statusMessage.textContent = '✅ Capture started successfully';
+            statusMessage.className = 'status success';
+            captureButton.textContent = 'Stop Capture';
+          } else {
+            statusMessage.textContent = '❌ Failed to start capture';
+            statusMessage.className = 'status error';
+          }
+        });
+      });
+      
+      console.log('Popup event listeners set up');
+    });
+  </script>
+</body>
+</html>

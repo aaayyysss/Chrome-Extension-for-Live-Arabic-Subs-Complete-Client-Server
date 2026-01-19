@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAS - Connection Debugger</title>
+  <style>
+    body {
+      width: 400px;
+      padding: 15px;
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      font-size: 12px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #444;
+    }
+    .log-container {
+      height: 200px;
+      overflow-y: auto;
+      background: #252526;
+      border: 1px solid #3c3c3c;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    }
+    .log-entry {
+      margin: 3px 0;
+      padding: 2px 5px;
+      border-radius: 2px;
+    }
+    .log-info { color: #4fc1ff; }
+    .log-success { color: #73c991; }
+    .log-error { color: #f48771; }
+    .log-warning { color: #d7ba7d; }
+    .log-debug { color: #c586c0; }
+    button {
+      width: 100%;
+      padding: 8px;
+      margin: 4px 0;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    button:hover { background: #005a9e; }
+    button:disabled { background: #666; cursor: not-allowed; }
+    .test-section {
+      background: #2d2d30;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #3794ff;
+    }
+    input, select {
+      width: 100%;
+      padding: 6px;
+      margin: 3px 0;
+      background: #3c3c3c;
+      border: 1px solid #565656;
+      border-radius: 3px;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .status-connected { background: #2d7d32; color: white; }
+    .status-disconnected { background: #c62828; color: white; }
+    .status-testing { background: #ff8f00; color: black; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>🔌 CONNECTION DEBUGGER</h3>
+    <div>Server Status: <span id="server-status" class="status-badge status-disconnected">DISCONNECTED</span></div>
+  </div>
+
+  <div class="log-container" id="logs"></div>
+
+  <div class="test-section">
+    <div class="section-title">🔧 SERVER TESTS</div>
+    <button id="test-local-connection">Test Local Server (8002)</button>
+    <button id="test-external-connection">Test External Server</button>
+    <button id="test-all-endpoints">Test All API Endpoints</button>
+  </div>
+
+  <div class="test-section">
+    <div class="section-title">🌐 NETWORK DIAGNOSTICS</div>
+    <button id="check-network">Check Network Connectivity</button>
+    <button id="test-cors">Test CORS Headers</button>
+    <button id="ping-google">Ping External Services</button>
+  </div>
+
+  <div class="test-section">
+    <div class="section-title">⚙️ EXTENSION DEBUG</div>
+    <button id="test-chrome-apis">Test Chrome APIs</button>
+    <button id="test-storage-access">Test Storage</button>
+    <button id="test-messaging">Test Background Communication</button>
+  </div>
+
+  <div class="test-section">
+    <div class="section-title">📝 CONFIGURATION</div>
+    <select id="backend-selector">
+      <option value="local">Local Server (8002)</option>
+      <option value="external">External Server</option>
+    </select>
+    <input type="text" id="api-key" placeholder="API Key for Testing">
+    <button id="save-config">Save Configuration</button>
+  </div>
+
+  <button id="clear-logs">Clear Logs</button>
+  <button id="export-logs">Export Logs</button>
+
+  <script>
+    // Global variables
+    let logEntries = [];
+    const MAX_LOG_ENTRIES = 200;
+
+    // Logging functions
+    function addLog(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = {
+        timestamp,
+        type,
+        message
+      };
+      
+      logEntries.push(logEntry);
+      
+      // Keep only recent entries
+      if (logEntries.length > MAX_LOG_ENTRIES) {
+        logEntries.shift();
+      }
+      
+      updateLogDisplay();
+    }
+
+    function updateLogDisplay() {
+      const logContainer = document.getElementById('logs');
+      logContainer.innerHTML = logEntries.map(entry => 
+        `<div class="log-entry log-${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+      ).join('');
+      
+      // Scroll to bottom
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function updateServerStatus(status) {
+      const statusElement = document.getElementById('server-status');
+      statusElement.textContent = status.toUpperCase();
+      statusElement.className = `status-badge status-${status}`;
+    }
+
+    // Test functions
+    async function testLocalConnection() {
+      addLog('Testing connection to local server (localhost:8002)...', 'info');
+      updateServerStatus('testing');
+      
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const startTime = Date.now();
+        const response = await fetch('http://localhost:8002/health', {
+          method: 'GET',
+          mode: 'cors',
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          }
+        });
+        clearTimeout(timeoutId);
+        
+        const endTime = Date.now();
+        const responseTime = endTime - startTime;
+        
+        if (response.ok) {
+          const data = await response.json();
+          addLog(`✅ CONNECTED! Response time: ${responseTime}ms`, 'success');
+          addLog(`   Server version: ${data.version}`, 'debug');
+          addLog(`   Timestamp: ${data.timestamp}`, 'debug');
+          updateServerStatus('connected');
+          return true;
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+      } catch (error) {
+        addLog(`❌ CONNECTION FAILED: ${error.message}`, 'error');
+        if (error.name === 'AbortError') {
+          addLog('   Timeout after 10 seconds', 'warning');
+        }
+        updateServerStatus('disconnected');
+        return false;
+      }
+    }
+
+    async function testAllEndpoints() {
+      const endpoints = [
+        { url: 'http://localhost:8002/', desc: 'Root' },
+        { url: 'http://localhost:8002/health', desc: 'Health Check' },
+        { url: 'http://localhost:8002/api/', desc: 'API Root' },
+        { url: 'http://localhost:8002/api/status', desc: 'API Status' }
+      ];
+      
+      addLog('Testing all server endpoints...', 'info');
+      
+      for (const endpoint of endpoints) {
+        try {
+          addLog(`Testing ${endpoint.desc} (${endpoint.url})...`, 'debug');
+          const response = await fetch(endpoint.url, { 
+            method: 'GET',
+            mode: 'cors'
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            addLog(`✅ ${endpoint.desc}: OK`, 'success');
+            addLog(`   Response: ${JSON.stringify(data).substring(0, 100)}...`, 'debug');
+          } else {
+            addLog(`❌ ${endpoint.desc}: HTTP ${response.status}`, 'error');
+          }
+        } catch (error) {
+          addLog(`❌ ${endpoint.desc}: ${error.message}`, 'error');
+        }
+      }
+    }
+
+    async function checkNetwork() {
+      addLog('Checking network connectivity...', 'info');
+      
+      // Test DNS resolution
+      try {
+        const dnsTest = await fetch('https://httpbin.org/get', { mode: 'cors' });
+        if (dnsTest.ok) {
+          addLog('✅ Internet connectivity: OK', 'success');
+        }
+      } catch (error) {
+        addLog(`❌ Internet connectivity: ${error.message}`, 'error');
+      }
+      
+      // Test localhost resolution
+      try {
+        const localhostTest = await fetch('http://127.0.0.1:8002/health', { mode: 'cors' });
+        if (localhostTest.ok) {
+          addLog('✅ Localhost resolution: OK', 'success');
+        }
+      } catch (error) {
+        addLog(`❌ Localhost resolution: ${error.message}`, 'error');
+      }
+    }
+
+    async function testChromeAPIs() {
+      addLog('Testing Chrome extension APIs...', 'info');
+      
+      // Test runtime
+      if (chrome && chrome.runtime) {
+        addLog(`✅ chrome.runtime available`, 'success');
+        addLog(`   Extension ID: ${chrome.runtime.id}`, 'debug');
+      } else {
+        addLog('❌ chrome.runtime not available', 'error');
+        return;
+      }
+      
+      // Test storage
+      try {
+        await chrome.storage.sync.set({ debug_test: Date.now() });
+        const result = await chrome.storage.sync.get(['debug_test']);
+        addLog(`✅ Storage API: Working`, 'success');
+        addLog(`   Test value: ${result.debug_test}`, 'debug');
+      } catch (error) {
+        addLog(`❌ Storage API: ${error.message}`, 'error');
+      }
+      
+      // Test messaging
+      chrome.runtime.sendMessage({ type: 'CONNECTION_DEBUG' }, (response) => {
+        if (chrome.runtime.lastError) {
+          addLog(`❌ Messaging: ${chrome.runtime.lastError.message}`, 'error');
+        } else {
+          addLog(`✅ Messaging: OK`, 'success');
+          addLog(`   Response: ${JSON.stringify(response)}`, 'debug');
+        }
+      });
+    }
+
+    // Event handlers
+    document.addEventListener('DOMContentLoaded', () => {
+      addLog('🔌 Connection Debugger Loaded', 'success');
+      addLog(`Chrome Version: ${navigator.userAgent.match(/Chrome\/(\d+\.\d+)/)?.[1] || 'Unknown'}`, 'info');
+      
+      // Button event handlers
+      document.getElementById('test-local-connection').addEventListener('click', testLocalConnection);
+      document.getElementById('test-all-endpoints').addEventListener('click', testAllEndpoints);
+      document.getElementById('check-network').addEventListener('click', checkNetwork);
+      document.getElementById('test-chrome-apis').addEventListener('click', testChromeAPIs);
+      
+      document.getElementById('clear-logs').addEventListener('click', () => {
+        logEntries = [];
+        updateLogDisplay();
+        addLog('Logs cleared', 'info');
+      });
+      
+      document.getElementById('export-logs').addEventListener('click', () => {
+        const logText = logEntries.map(entry => 
+          `[${entry.timestamp}] ${entry.type.toUpperCase()}: ${entry.message}`
+        ).join('\n');
+        
+        const blob = new Blob([logText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `las-debug-log-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        addLog('Logs exported', 'success');
+      });
+      
+      // Auto-test connection on load
+      setTimeout(testLocalConnection, 1000);
+    });
+  </script>
+</body>
+</html>
