@@ -1,0 +1,38 @@
+2026-01-19 20:24:25,031 - __main__ - INFO - ==================================================
+2026-01-19 20:24:25,065 - __main__ - INFO - ==================================================
+2026-01-19 20:24:25,065 - __main__ - INFO - Server configuration:
+2026-01-19 20:24:25,066 - __main__ - INFO -   - Port: 8002
+2026-01-19 20:24:25,066 - __main__ - INFO -   - Mode: Debug with full logging
+2026-01-19 20:24:25,066 - __main__ - INFO -   - Log file: server_debug.log
+2026-01-19 20:24:25,066 - __main__ - INFO -   - Endpoints available:
+2026-01-19 20:24:25,067 - __main__ - INFO -     * GET  /
+2026-01-19 20:24:25,067 - __main__ - INFO -     * GET  /health
+2026-01-19 20:24:25,067 - __main__ - INFO -     * GET  /api/
+2026-01-19 20:24:25,067 - __main__ - INFO -     * GET  /api/status
+2026-01-19 20:24:25,067 - __main__ - INFO -     * POST /api/transcribe
+2026-01-19 20:24:25,067 - __main__ - INFO -     * POST /api/translate
+2026-01-19 20:24:25,068 - __main__ - INFO - ==================================================
+2026-01-19 20:30:43,100 - __main__ - INFO - ==================================================
+2026-01-19 20:30:43,104 - __main__ - INFO - ==================================================
+2026-01-19 20:30:43,104 - __main__ - INFO - Server configuration:
+2026-01-19 20:30:43,104 - __main__ - INFO -   - Port: 8002
+2026-01-19 20:30:43,104 - __main__ - INFO -   - Mode: Debug with full logging
+2026-01-19 20:30:43,104 - __main__ - INFO -   - Log file: server_debug.log
+2026-01-19 20:30:43,104 - __main__ - INFO -   - Endpoints available:
+2026-01-19 20:30:43,104 - __main__ - INFO -     * GET  /
+2026-01-19 20:30:43,105 - __main__ - INFO -     * GET  /health
+2026-01-19 20:30:43,105 - __main__ - INFO -     * GET  /api/
+2026-01-19 20:30:43,105 - __main__ - INFO -     * GET  /api/status
+2026-01-19 20:30:43,105 - __main__ - INFO -     * POST /api/transcribe
+2026-01-19 20:30:43,105 - __main__ - INFO -     * POST /api/translate
+2026-01-19 20:30:43,105 - __main__ - INFO - ==================================================
+2026-01-19 20:31:09,153 - __main__ - INFO -    Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; de-DE) WindowsPowerShell/5.1.26100.7462', 'host': 'localhost:8002', 'connection': 'Keep-Alive'}
+2026-01-19 20:32:54,059 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:01,203 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:03,963 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:03,984 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:04,003 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:04,022 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:33:21,160 - __main__ - INFO -    Headers: {'host': 'localhost:8002', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'sec-ch-ua': '"Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'origin': 'null', 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9'}
+2026-01-19 20:37:00,994 - __main__ - INFO -    Headers: {'host': '127.0.0.1:8002', 'connection': 'keep-alive', 'sec-ch-ua': '"Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'ar-AE,ar;q=0.9,de-DE;q=0.8,de;q=0.7,en-US;q=0.6,en;q=0.5'}
+2026-01-19 20:37:01,045 - __main__ - INFO -    Headers: {'host': '127.0.0.1:8002', 'connection': 'keep-alive', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'no-cors', 'sec-fetch-dest': 'empty', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'ar-AE,ar;q=0.9,de-DE;q=0.8,de;q=0.7,en-US;q=0.6,en;q=0.5'}
