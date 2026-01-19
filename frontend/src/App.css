@@ -1,0 +1,32 @@
+/* App-specific styles - minimal, most styling via Tailwind */
+
+.App {
+  min-height: 100vh;
+  background-color: #050505;
+}
+
+/* Ensure proper RTL rendering for Arabic */
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Animation for the recording button */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.pulse-animation {
+  animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
