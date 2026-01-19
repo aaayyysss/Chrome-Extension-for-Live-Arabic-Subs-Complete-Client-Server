@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Arabic Subs - Debug Diagnostics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .test-section {
+            background: #3d3d3d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+        .warning {
+            border-left-color: #FFC107;
+            background: rgba(255, 193, 7, 0.1);
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+            border: 1px solid #444;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-ok { background: #4CAF50; }
+        .status-error { background: #f44336; }
+        .status-warning { background: #FFC107; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Live Arabic Subs - Debug Diagnostics</h1>
+    
+    <div class="container">
+        <h2>📋 Diagnostic Tests</h2>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-warning"></span>Test 1: Extension Installation Check</h3>
+            <button onclick="testExtensionInstallation()">Check Extension</button>
+            <div id="extension-status" class="console-output">Click button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-warning"></span>Test 2: Content Script Injection</h3>
+            <button onclick="testContentScript()">Test Content Script</button>
+            <div id="content-script-status" class="console-output">Click button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-warning"></span>Test 3: Message Passing</h3>
+            <button onclick="testMessaging()">Test Messages</button>
+            <div id="messaging-status" class="console-output">Click button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-warning"></span>Test 4: Overlay Creation</h3>
+            <button onclick="testOverlay()">Test Overlay</button>
+            <div id="overlay-status" class="console-output">Click button to test...</div>
+        </div>
+        
+        <div class="test-section">
+            <h3><span class="status-indicator status-warning"></span>Test 5: Audio Capture</h3>
+            <button onclick="testAudioCapture()">Test Audio</button>
+            <div id="audio-status" class="console-output">Click button to test...</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🔧 Manual Debug Steps</h2>
+        <ol>
+            <li><strong>Open DevTools Console</strong> (F12) and check for errors</li>
+            <li><strong>Reload Extension</strong> in chrome://extensions/</li>
+            <li><strong>Refresh this page</strong> after reloading extension</li>
+            <li><strong>Run tests above</strong> in order</li>
+            <li><strong>Check background script console</strong> in chrome://extensions/</li>
+        </ol>
+    </div>
+
+    <script>
+        // Global variables for debugging
+        let consoleOutput = [];
+        
+        function logToDiv(divId, message, isError = false) {
+            const div = document.getElementById(divId);
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            
+            consoleOutput.push(logEntry);
+            div.innerHTML += (isError ? '<span style="color: #ff6b6b;">' : '') + 
+                           logEntry + 
+                           (isError ? '</span>' : '') + '<br>';
+            div.scrollTop = div.scrollHeight;
+            
+            console.log(message);
+        }
+        
+        function clearLog(divId) {
+            document.getElementById(divId).innerHTML = '';
+            consoleOutput = [];
+        }
+        
+        // Test 1: Extension Installation
+        async function testExtensionInstallation() {
+            const divId = 'extension-status';
+            clearLog(divId);
+            
+            try {
+                logToDiv(divId, 'Checking if extension is installed...');
+                
+                // Try to communicate with extension
+                chrome.runtime.sendMessage({ type: 'PING' }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        logToDiv(divId, '❌ Extension not responding: ' + chrome.runtime.lastError.message, true);
+                        updateStatus('extension-status', false);
+                    } else {
+                        logToDiv(divId, '✅ Extension is installed and responding');
+                        updateStatus('extension-status', true);
+                    }
+                });
+                
+            } catch (error) {
+                logToDiv(divId, '❌ Error checking extension: ' + error.message, true);
+                updateStatus('extension-status', false);
+            }
+        }
+        
+        // Test 2: Content Script
+        function testContentScript() {
+            const divId = 'content-script-status';
+            clearLog(divId);
+            
+            try {
+                logToDiv(divId, 'Testing content script injection...');
+                
+                // Check if our debug flag exists
+                if (window.__liveArabicSubsInjected) {
+                    logToDiv(divId, '✅ Content script is injected');
+                    updateStatus('content-script-status', true);
+                } else {
+                    logToDiv(divId, '❌ Content script not detected', true);
+                    updateStatus('content-script-status', false);
+                }
+                
+            } catch (error) {
+                logToDiv(divId, '❌ Error testing content script: ' + error.message, true);
+                updateStatus('content-script-status', false);
+            }
+        }
+        
+        // Test 3: Message Passing
+        function testMessaging() {
+            const divId = 'messaging-status';
+            clearLog(divId);
+            
+            try {
+                logToDiv(divId, 'Testing message passing to background script...');
+                
+                chrome.runtime.sendMessage({ type: 'GET_STATE' }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        logToDiv(divId, '❌ Message failed: ' + chrome.runtime.lastError.message, true);
+                        updateStatus('messaging-status', false);
+                    } else {
+                        logToDiv(divId, '✅ Message successful');
+                        logToDiv(divId, 'Response: ' + JSON.stringify(response, null, 2));
+                        updateStatus('messaging-status', true);
+                    }
+                });
+                
+            } catch (error) {
+                logToDiv(divId, '❌ Error in messaging: ' + error.message, true);
+                updateStatus('messaging-status', false);
+            }
+        }
+        
+        // Test 4: Overlay Creation
+        function testOverlay() {
+            const divId = 'overlay-status';
+            clearLog(divId);
+            
+            try {
+                logToDiv(divId, 'Testing overlay creation...');
+                
+                // Send message to create/show overlay
+                chrome.runtime.sendMessage({ type: 'SHOW_OVERLAY' }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        logToDiv(divId, '❌ Overlay message failed: ' + chrome.runtime.lastError.message, true);
+                        updateStatus('overlay-status', false);
+                    } else {
+                        logToDiv(divId, '✅ Overlay message sent successfully');
+                        
+                        // Check if overlay element exists
+                        setTimeout(() => {
+                            const overlay = document.getElementById('live-arabic-subs-overlay');
+                            if (overlay) {
+                                logToDiv(divId, '✅ Overlay element found in DOM');
+                                updateStatus('overlay-status', true);
+                            } else {
+                                logToDiv(divId, '❌ Overlay element not found in DOM', true);
+                                updateStatus('overlay-status', false);
+                            }
+                        }, 1000);
+                    }
+                });
+                
+            } catch (error) {
+                logToDiv(divId, '❌ Error testing overlay: ' + error.message, true);
+                updateStatus('overlay-status', false);
+            }
+        }
+        
+        // Test 5: Audio Capture
+        function testAudioCapture() {
+            const divId = 'audio-status';
+            clearLog(divId);
+            
+            try {
+                logToDiv(divId, 'Testing audio capture initiation...');
+                
+                chrome.runtime.sendMessage({ type: 'START_CAPTURE' }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        logToDiv(divId, '❌ Audio capture failed: ' + chrome.runtime.lastError.message, true);
+                        updateStatus('audio-status', false);
+                    } else {
+                        logToDiv(divId, '✅ Audio capture started');
+                        logToDiv(divId, 'Response: ' + JSON.stringify(response, null, 2));
+                        updateStatus('audio-status', true);
+                        
+                        // Test stopping after 3 seconds
+                        setTimeout(() => {
+                            chrome.runtime.sendMessage({ type: 'STOP_CAPTURE' }, (stopResponse) => {
+                                if (chrome.runtime.lastError) {
+                                    logToDiv(divId, '❌ Failed to stop capture: ' + chrome.runtime.lastError.message, true);
+                                } else {
+                                    logToDiv(divId, '✅ Audio capture stopped successfully');
+                                }
+                            });
+                        }, 3000);
+                    }
+                });
+                
+            } catch (error) {
+                logToDiv(divId, '❌ Error testing audio: ' + error.message, true);
+                updateStatus('audio-status', false);
+            }
+        }
+        
+        function updateStatus(elementId, isSuccess) {
+            const section = document.querySelector(`#${elementId}`).closest('.test-section');
+            const indicator = section.querySelector('.status-indicator');
+            
+            if (isSuccess) {
+                indicator.className = 'status-indicator status-ok';
+                section.style.borderLeftColor = '#4CAF50';
+            } else {
+                indicator.className = 'status-indicator status-error';
+                section.style.borderLeftColor = '#f44336';
+            }
+        }
+        
+        // Auto-run basic diagnostics on page load
+        window.addEventListener('load', () => {
+            console.log('Debug page loaded - ready for testing');
+        });
+    </script>
+</body>
+</html>

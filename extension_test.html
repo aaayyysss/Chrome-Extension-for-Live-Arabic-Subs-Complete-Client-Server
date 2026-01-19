@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAS Extension Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 20px auto; 
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result { 
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        button { 
+            padding: 12px 24px; 
+            margin: 8px; 
+            font-size: 16px; 
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        #log { 
+            height: 300px; 
+            overflow-y: scroll; 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            background: #f8f9fa; 
+            font-family: monospace;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Live Arabic Subs - Extension Context Test</h1>
+        <p class="warning"><strong>Important:</strong> This test must be run from within the Chrome extension context to work properly.</p>
+        
+        <div>
+            <button onclick="testExtensionContext()">Verify Extension Context</button>
+            <button onclick="testServerConnection()">Test Server Connection</button>
+            <button onclick="testAllEndpoints()">Test All Endpoints</button>
+            <button onclick="testBackgroundMessaging()">Test Background Communication</button>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+        
+        <div id="results"></div>
+        <div id="log"></div>
+        
+        <div class="info" style="margin-top: 20px;">
+            <h3>Troubleshooting Guide:</h3>
+            <ul>
+                <li>If buttons don't respond, check Chrome DevTools console</li>
+                <li>Ensure extension is properly loaded in chrome://extensions/</li>
+                <li>Server should be running on localhost:8002</li>
+                <li>This page works best when opened from extension popup</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let logEntries = [];
+        
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = `[${timestamp}] ${message}`;
+            logEntries.push(entry);
+            
+            const logDiv = document.getElementById('log');
+            const resultDiv = document.getElementById('results');
+            
+            // Add to log
+            logDiv.innerHTML += `<div class="${type} test-result">${entry}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            
+            // Add to results (latest on top)
+            resultDiv.innerHTML = `<div class="${type} test-result">${entry}</div>` + resultDiv.innerHTML;
+        }
+        
+        function clearLog() {
+            logEntries = [];
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+            addLog('Log cleared', 'info');
+        }
+        
+        function testExtensionContext() {
+            addLog('Testing extension context availability...', 'info');
+            
+            // Test Chrome APIs
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                addLog('✅ Chrome extension APIs available', 'success');
+                addLog(`   Extension ID: ${chrome.runtime.id}`, 'info');
+                
+                // Test storage
+                try {
+                    chrome.storage.sync.set({ test_key: 'test_value' }, () => {
+                        if (chrome.runtime.lastError) {
+                            addLog(`❌ Storage error: ${chrome.runtime.lastError.message}`, 'error');
+                        } else {
+                            addLog('✅ Storage API working', 'success');
+                        }
+                    });
+                } catch (e) {
+                    addLog(`❌ Storage test failed: ${e.message}`, 'error');
+                }
+                
+                // Test messaging
+                try {
+                    chrome.runtime.sendMessage({ type: 'CONTEXT_TEST' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            addLog(`❌ Messaging error: ${chrome.runtime.lastError.message}`, 'error');
+                        } else {
+                            addLog('✅ Messaging API working', 'success');
+                            addLog(`   Response: ${JSON.stringify(response)}`, 'info');
+                        }
+                    });
+                } catch (e) {
+                    addLog(`❌ Messaging test failed: ${e.message}`, 'error');
+                }
+                
+            } else {
+                addLog('❌ Chrome extension APIs NOT available', 'error');
+                addLog('   This page may not be running in extension context', 'warning');
+            }
+            
+            // Test fetch capabilities
+            if (typeof fetch !== 'undefined') {
+                addLog('✅ Fetch API available', 'success');
+            } else {
+                addLog('❌ Fetch API NOT available', 'error');
+            }
+        }
+        
+        async function testServerConnection() {
+            addLog('Testing connection to localhost:8002...', 'info');
+            
+            try {
+                // Add timeout and error handling
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch('http://localhost:8002/health', {
+                    method: 'GET',
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addLog('✅ Server connection successful', 'success');
+                    addLog(`   Status: ${data.status}`, 'info');
+                    addLog(`   Version: ${data.version}`, 'info');
+                    addLog(`   Port: ${data.port}`, 'info');
+                } else {
+                    addLog(`❌ Server responded with status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Connection failed: ${error.message}`, 'error');
+                if (error.name === 'AbortError') {
+                    addLog('   Request timed out after 10 seconds', 'warning');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addLog('   This usually indicates CORS or network issues', 'warning');
+                    addLog('   Try: 1) Ensure server is running 2) Check CORS settings 3) Test from extension context', 'info');
+                }
+            }
+        }
+        
+        async function testAllEndpoints() {
+            const endpoints = [
+                { url: 'http://localhost:8002/', name: 'Root' },
+                { url: 'http://localhost:8002/health', name: 'Health Check' },
+                { url: 'http://localhost:8002/api/', name: 'API Root' },
+                { url: 'http://localhost:8002/api/status', name: 'API Status' }
+            ];
+            
+            addLog('Testing all server endpoints...', 'info');
+            
+            for (const endpoint of endpoints) {
+                try {
+                    addLog(`Testing ${endpoint.name}...`, 'info');
+                    const response = await fetch(endpoint.url, { 
+                        method: 'GET',
+                        mode: 'cors'
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        addLog(`✅ ${endpoint.name}: OK`, 'success');
+                        addLog(`   Response: ${JSON.stringify(data).substring(0, 100)}...`, 'info');
+                    } else {
+                        addLog(`❌ ${endpoint.name}: HTTP ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    addLog(`❌ ${endpoint.name}: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        function testBackgroundMessaging() {
+            addLog('Testing communication with background script...', 'info');
+            
+            if (typeof chrome === 'undefined' || !chrome.runtime) {
+                addLog('❌ Cannot test - Chrome APIs not available', 'error');
+                return;
+            }
+            
+            chrome.runtime.sendMessage({ type: 'PING_BACKGROUND' }, (response) => {
+                if (chrome.runtime.lastError) {
+                    addLog(`❌ Background communication failed: ${chrome.runtime.lastError.message}`, 'error');
+                } else {
+                    addLog('✅ Background communication successful', 'success');
+                    addLog(`   Response: ${JSON.stringify(response)}`, 'info');
+                }
+            });
+        }
+        
+        // Auto-run context test on page load
+        window.addEventListener('load', () => {
+            addLog('Extension test page loaded', 'info');
+            setTimeout(testExtensionContext, 500);
+        });
+        
+        // Handle any uncaught errors
+        window.addEventListener('error', (event) => {
+            addLog(`❌ Uncaught error: ${event.error.message}`, 'error');
+        });
+    </script>
+</body>
+</html>

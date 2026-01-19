@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Arabic Subs - Extension Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .video-container {
+            background: black;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        video {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Live Arabic Subs - Extension Test</h1>
+    
+    <div class="instructions">
+        <h2>📋 Testing Instructions:</h2>
+        <div class="step">
+            <strong>Step 1:</strong> Install the extension in Chrome Developer Mode
+            <ul>
+                <li>Go to chrome://extensions/</li>
+                <li>Enable "Developer mode"</li>
+                <li>Click "Load unpacked" and select the "extension" folder</li>
+            </ul>
+        </div>
+        <div class="step">
+            <strong>Step 2:</strong> Pin the extension to your toolbar
+            <ul>
+                <li>Click the puzzle piece icon</li>
+                <li>Find "Live Arabic Subs" and click the pin</li>
+            </ul>
+        </div>
+        <div class="step">
+            <strong>Step 3:</strong> Test the overlay injection
+            <ul>
+                <li>Click the extension icon in your toolbar</li>
+                <li>Click "Start Capture"</li>
+                <li>You should see the subtitle overlay appear at the bottom</li>
+            </ul>
+        </div>
+        <div class="step">
+            <strong>Step 4:</strong> Test with audio
+            <ul>
+                <li>Play any video on this page or another site</li>
+                <li>Speak into your microphone or play audio</li>
+                <li>Watch for real-time subtitles in the overlay</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="video-container">
+        <h2>📺 Sample Video Player</h2>
+        <video controls>
+            <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p><em>Note: This is a sample video. For real testing, use YouTube or other video platforms.</em></p>
+    </div>
+
+    <div class="instructions">
+        <h2>✅ Expected Behavior:</h2>
+        <ul>
+            <li>Extension icon appears in toolbar</li>
+            <li>Clicking icon opens popup with controls</li>
+            <li>"Start Capture" button initiates audio capture</li>
+            <li>Subtitle overlay appears at bottom of page</li>
+            <li>Real-time English transcription displays</li>
+            <li>Arabic translation appears below English</li>
+            <li>Overlay is draggable and customizable</li>
+        </ul>
+        
+        <h2>🔧 Troubleshooting:</h2>
+        <ul>
+            <li>If overlay doesn't appear, refresh the page</li>
+            <li>Check console for errors (F12 → Console)</li>
+            <li>Ensure backend API is accessible</li>
+            <li>Verify microphone permissions are granted</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+[19.01.2026 17:32:11,58] Starting deployment 
+extension\manifest.json
+extension\README.md
+extension\background\enhanced-service-worker.js
+extension\background\service-worker.js
+extension\content\content.js
+extension\content\overlay.css
+extension\icons\icon128.png
+extension\icons\icon128.svg
+extension\icons\icon16.png
+extension\icons\icon16.svg
+extension\icons\icon48.png
+extension\icons\icon48.svg
+extension\offscreen\offscreen.html
+extension\offscreen\offscreen.js
+extension\popup\enhanced-popup.css
+extension\popup\enhanced-popup.html
+extension\popup\enhanced-popup.js
+extension\popup\popup.css
+extension\popup\popup.html
+extension\popup\popup.js
+extension\popup\version-controlled-popup.html
+extension\utils\config.js
+extension\utils\logger.js
+23 File(s) copied
+[19.01.2026 17:32:11,58] Backup created 
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
+The file cannot be copied onto itself.
+        0 file(s) copied.
+The file cannot be copied onto itself.
+        0 file(s) copied.
+        1 file(s) moved.
+[19.01.2026 17:32:11,94] Deployment completed successfully 

@@ -1,0 +1,134 @@
+{
+  "identity": {
+    "name": "E1 - The Anti-AI Designer",
+    "tone": "Cinematic, Invisible, Precision-Engineered",
+    "core_philosophy": "The interface should disappear; only the content remains. Subtitles are art, not just text.",
+    "theme_strategy": "Dark Mode Only (Cinema Standard). No light mode toggle needed for this specific utility."
+  },
+  "typography": {
+    "primary_font": {
+      "name": "Manrope",
+      "url": "https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap",
+      "usage": "UI Controls, English Source Text, Headings"
+    },
+    "secondary_font": {
+      "name": "IBM Plex Sans Arabic",
+      "url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap",
+      "usage": "Arabic Translation Output (CRITICAL for legibility)"
+    },
+    "rules": [
+      "Arabic text must be 120% size of English text for optical balance.",
+      "Use 'tracking-wide' for English UI labels (uppercase).",
+      "Use 'leading-relaxed' for subtitle text lines."
+    ]
+  },
+  "colors": {
+    "background": {
+      "app_bg": "#050505",
+      "panel_bg": "#121212",
+      "overlay_bg": "rgba(0, 0, 0, 0.75)"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A1A1AA",
+      "subtitle_default": "#F5C518",
+      "subtitle_white": "#FFFFFF"
+    },
+    "accent": {
+      "primary": "#3B82F6",
+      "recording": "#EF4444",
+      "active_glow": "0 0 20px rgba(59, 130, 246, 0.5)"
+    },
+    "border": {
+      "subtle": "rgba(255, 255, 255, 0.1)",
+      "active": "rgba(255, 255, 255, 0.2)"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": {
+      "settings_panel": "bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl",
+      "overlay_window": "bg-black/80 backdrop-blur-sm rounded-lg"
+    },
+    "shadows": {
+      "subtitle_text": "drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]",
+      "floating_window": "0 8px 32px rgba(0, 0, 0, 0.4)"
+    },
+    "textures": {
+      "dashboard_bg": "radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 100%)"
+    }
+  },
+  "layout": {
+    "grid_system": "Flexible Flexbox for Dashboard, Absolute Positioning for Overlay",
+    "spacing": {
+      "container_padding": "p-8 md:p-12",
+      "element_gap": "gap-6"
+    },
+    "z_index": {
+      "base": 0,
+      "controls": 10,
+      "overlay": 50,
+      "settings_modal": 100,
+      "toast": 9999
+    }
+  },
+  "components": {
+    "dashboard": {
+      "structure": "Central Control Deck. Hero section with 'Start Capture' button. Settings accessible via gear icon.",
+      "style": "Minimalist, centered, distraction-free."
+    },
+    "subtitle_overlay": {
+      "structure": "Draggable container. Top: English (Source) in small grey. Bottom: Arabic (Target) in large yellow/white.",
+      "features": [
+        "Draggable handle (hidden when locked)",
+        "Resize handle",
+        "Close button (hover only)"
+      ]
+    },
+    "settings_panel": {
+      "structure": "Tabbed interface: 'General', 'Appearance', 'Advanced'.",
+      "controls": [
+        "Font Size Slider (Range: 12px - 48px)",
+        "Opacity Slider (Background)",
+        "Color Picker (Presets: White, Yellow, Cyan)",
+        "Font Family Selector"
+      ]
+    }
+  },
+  "assets": {
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1764258254996-c568779e68c6?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "category": "dashboard_bg_optional",
+        "description": "Abstract blue textured background for a premium feel (optional usage)"
+      }
+    ],
+    "icons": "Use 'lucide-react' for all UI icons (Mic, Settings, X, Move, Type, Palette)."
+  },
+  "accessibility": {
+    "rtl_support": "CRITICAL: The Arabic subtitle container MUST have 'dir=rtl'.",
+    "contrast": "Ensure subtitle text has a text-shadow or semi-transparent background to be readable against ANY video content (white snow or black night scenes).",
+    "keyboard_nav": "All controls must be focusable."
+  },
+  "tech_stack": {
+    "framework": "React",
+    "styling": "Tailwind CSS",
+    "ui_library": "Shadcn/UI (Radix Primitives)",
+    "icons": "Lucide React",
+    "state_management": "React Context or Zustand (for settings persistence)"
+  },
+  "instructions_to_main_agent": [
+    "1. CLEANUP: Remove default React logos and 'App.css' styles. Reset to a clean slate.",
+    "2. FONTS: Add the Google Fonts links to 'public/index.html' immediately.",
+    "3. STRUCTURE: Create a 'SubtitleContext' to manage settings (size, color, etc.) globally.",
+    "4. OVERLAY: Implement the Picture-in-Picture API logic or a custom floating 'Draggable' div using 'react-draggable' if PiP API is too restrictive for custom styling (PiP API often only supports video, not arbitrary HTML. For this MVP, a 'Floating Window' within the browser tab is the safer, more customizable approach first. If PiP is strictly required, render the subtitles to a Canvas and stream that Canvas to a Video element). *Decision: Use a Floating Draggable Div within the viewport for the MVP to ensure rich styling support.*",
+    "5. RTL: Ensure the Arabic text rendering handles ligatures correctly (browser default usually works, but font choice matters).",
+    "6. MICRO-INTERACTIONS: Add hover states to the draggable window so controls appear only when needed."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not use gradients for text.",
+    "Use 'backdrop-blur' heavily for the settings panel.",
+    "Ensure all interactive elements have 'data-testid'.",
+    "Use 'sonner' for notifications (e.g., 'Microphone Connected').",
+    "Never use generic 'alert()' calls."
+  ]
+}

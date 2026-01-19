@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Arabic Subs - Enhanced Features Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .feature-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .feature-section h2 {
+            margin-top: 0;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .improvement {
+            background: rgba(255, 193, 7, 0.2);
+            border-left-color: #FFC107;
+        }
+        .improvement h2 {
+            color: #FFC107;
+        }
+        .test-steps {
+            background: rgba(33, 150, 243, 0.2);
+            border-left-color: #2196F3;
+        }
+        .test-steps h2 {
+            color: #2196F3;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+        .tip {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 3px solid #FF9800;
+        }
+        .tip strong {
+            color: #FF9800;
+        }
+        .video-demo {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        .keyboard-shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .shortcut-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .shortcut-key {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Live Arabic Subs - Enhanced Version</h1>
+        
+        <div class="feature-section improvement">
+            <h2>✨ NEW IMPROVEMENTS</h2>
+            <ol>
+                <li><strong>🔊 Audio Playback Preservation</strong> - Video audio now continues playing normally during subtitle capture</li>
+                <li><strong>🎯 Enhanced Dragging Experience</strong> - Improved overlay positioning with visual feedback and boundary detection</li>
+                <li><strong>⚡ Double-click Reset</strong> - Quickly reset overlay to center position with double-click</li>
+                <li><strong>🔔 Interactive Notifications</strong> - Visual feedback when enabling/disabling drag mode</li>
+                <li><strong>🔒 Better Position Constraints</strong> - Overlay stays within viewport boundaries</li>
+            </ol>
+        </div>
+
+        <div class="feature-section test-steps">
+            <h2>📋 Testing Instructions</h2>
+            
+            <div class="tip">
+                <strong>Pre-requisite:</strong> Make sure you've loaded the updated extension files
+            </div>
+
+            <h3>🧪 Audio Test (Fixed Issue #1):</h3>
+            <ol>
+                <li>Navigate to any video platform (YouTube, Netflix, etc.)</li>
+                <li>Click the extension icon and press "Start Capture"</li>
+                <li><strong>Play a video</strong> - Notice that audio plays normally!</li>
+                <li>Speak or let the video play - subtitles should appear</li>
+                <li>Verify audio continues playing throughout the capture session</li>
+            </ol>
+
+            <h3>🎯 Dragging Test (Enhanced Feature #2):</h3>
+            <ol>
+                <li>Start capture to show the overlay</li>
+                <li>Hover over the overlay to reveal the control bar</li>
+                <li>Click the <strong>grid/drag icon</strong> to enable drag mode</li>
+                <li>Notice the blue highlight and drag handle indicator appears</li>
+                <li><strong>Click and drag</strong> the overlay to any position</li>
+                <li>Try dragging near screen edges - notice boundary constraints</li>
+                <li><strong>Double-click</strong> the overlay to reset to center position</li>
+                <li>Test clicking the lock/reset icon to center the overlay</li>
+            </ol>
+        </div>
+
+        <div class="feature-section">
+            <h2>🎮 Enhanced User Experience</h2>
+            
+            <div class="keyboard-shortcuts">
+                <div class="shortcut-card">
+                    <h4>🖱️ Mouse Controls</h4>
+                    <div class="shortcut-key">Click + Drag</div>
+                    <p>Move overlay anywhere</p>
+                </div>
+                <div class="shortcut-card">
+                    <h4>🔄 Quick Reset</h4>
+                    <div class="shortcut-key">Double-click</div>
+                    <p>Reset to center position</p>
+                </div>
+                <div class="shortcut-card">
+                    <h4>🔒 Center Lock</h4>
+                    <div class="shortcut-key">Lock Icon</div>
+                    <p>Force center bottom position</p>
+                </div>
+                <div class="shortcut-card">
+                    <h4>⚙️ Settings</h4>
+                    <div class="shortcut-key">Gear Icon</div>
+                    <p>Open extension popup</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-section">
+            <h2>🔧 Technical Improvements</h2>
+            <ul>
+                <li><strong>Audio Processing:</strong> Disabled echo cancellation and noise suppression to preserve original audio quality</li>
+                <li><strong>Boundary Detection:</strong> Overlay cannot be dragged outside the visible viewport</li>
+                <li><strong>Visual Feedback:</strong> Blue highlighting and shadow effects during dragging</li>
+                <li><strong>Persistent Settings:</strong> Position and drag preferences saved between sessions</li>
+                <li><strong>User Guidance:</strong> Temporary notifications for feature discovery</li>
+            </ul>
+        </div>
+
+        <div class="video-demo">
+            <h3>📺 Test Video Area</h3>
+            <p>Use this space to test with embedded videos or open external video platforms</p>
+            <iframe 
+                width="560" 
+                height="315" 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="Test Video" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            <p><em>Note: For best testing, use actual video platforms like YouTube or Netflix</em></p>
+        </div>
+
+        <div class="feature-section">
+            <h2>✅ Expected Behavior Verification</h2>
+            <ul>
+                <li><strong>Audio Continuity:</strong> ✓ Video audio plays normally during capture</li>
+                <li><strong>Smooth Dragging:</strong> ✓ Overlay moves smoothly with mouse</li>
+                <li><strong>Bounded Movement:</strong> ✓ Overlay stays within screen bounds</li>
+                <li><strong>Position Memory:</strong> ✓ Overlay remembers last position</li>
+                <li><strong>Quick Reset:</strong> ✓ Double-click centers the overlay</li>
+                <li><strong>Visual Feedback:</strong> ✓ Clear indicators for drag mode</li>
+                <li><strong>User Notifications:</strong> ✓ Helpful tips appear when needed</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>Troubleshooting:</strong> If you encounter issues, try refreshing the page and restarting the extension. Check the browser console (F12) for any error messages.
+        </div>
+    </div>
+</body>
+</html>
