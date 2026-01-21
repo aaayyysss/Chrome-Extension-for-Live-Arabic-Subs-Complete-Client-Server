@@ -6,6 +6,20 @@ import logging
 from datetime import datetime
 import os
 
+import re
+from starlette.responses import RedirectResponse
+
+@app.middleware("http")
+async def collapse_double_slashes(request, call_next):
+    path = request.scope.get("path", "")
+    if '//' in path:
+        new_path = re.sub(r"/{2,}", "/", path)
+        # preserve querystring
+        qs = request.url.query
+        url = str(request.url.replace(path=new_path, query=qs))
+        return RedirectResponse(url, status_code=307)
+    return await call_next(request)
+
 # Configure production logging
 logging.basicConfig(
     level=logging.INFO,
@@ -110,4 +124,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=port,
         log_level="info"
+
     )
